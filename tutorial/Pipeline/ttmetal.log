@@ -2,13 +2,17 @@
 module {
   ttcore.device_module {
     builtin.module {
-      func.func @gelu_bw_default(%arg0: tensor<4x4xbf16>, %arg1: tensor<4x4xbf16>) -> tensor<4x4xbf16> {
-        %0 = "ttir.gelu_bw"(%arg0, %arg1) <{approximate = "none"}> : (tensor<4x4xbf16>, tensor<4x4xbf16>) -> tensor<4x4xbf16>
-        return %0 : tensor<4x4xbf16>
+      func.func @full_float() -> tensor<64x128xbf16> {
+        %0 = "ttir.full"() <{fill_value = 3.000000e+00 : f32, shape = array<i32: 64, 128>}> : () -> tensor<64x128xbf16>
+        return %0 : tensor<64x128xbf16>
       }
-      func.func @gelu_bw(%arg0: tensor<4x4xbf16>, %arg1: tensor<4x4xbf16>) -> tensor<4x4xbf16> {
-        %0 = "ttir.gelu_bw"(%arg0, %arg1) <{approximate = "tanh"}> : (tensor<4x4xbf16>, tensor<4x4xbf16>) -> tensor<4x4xbf16>
-        return %0 : tensor<4x4xbf16>
+      func.func @full_int() -> tensor<64x128xi32> {
+        %0 = "ttir.full"() <{fill_value = 3 : i32, shape = array<i32: 64, 128>}> : () -> tensor<64x128xi32>
+        return %0 : tensor<64x128xi32>
+      }
+      func.func @full_int_scalar() -> tensor<1xi32> {
+        %0 = "ttir.full"() <{fill_value = 3 : i32, shape = array<i32: 1>}> : () -> tensor<1xi32>
+        return %0 : tensor<1xi32>
       }
     }
   }
@@ -19,13 +23,17 @@ module {
 module {
   ttcore.device_module {
     builtin.module {
-      func.func @gelu_bw_default(%arg0: tensor<4x4xbf16>, %arg1: tensor<4x4xbf16>) -> tensor<4x4xbf16> {
-        %0 = "ttir.gelu_bw"(%arg0, %arg1) <{approximate = "none"}> : (tensor<4x4xbf16>, tensor<4x4xbf16>) -> tensor<4x4xbf16>
-        return %0 : tensor<4x4xbf16>
+      func.func @full_float() -> tensor<64x128xbf16> {
+        %0 = "ttir.full"() <{fill_value = 3.000000e+00 : f32, shape = array<i32: 64, 128>}> : () -> tensor<64x128xbf16>
+        return %0 : tensor<64x128xbf16>
       }
-      func.func @gelu_bw(%arg0: tensor<4x4xbf16>, %arg1: tensor<4x4xbf16>) -> tensor<4x4xbf16> {
-        %0 = "ttir.gelu_bw"(%arg0, %arg1) <{approximate = "tanh"}> : (tensor<4x4xbf16>, tensor<4x4xbf16>) -> tensor<4x4xbf16>
-        return %0 : tensor<4x4xbf16>
+      func.func @full_int() -> tensor<64x128xi32> {
+        %0 = "ttir.full"() <{fill_value = 3 : i32, shape = array<i32: 64, 128>}> : () -> tensor<64x128xi32>
+        return %0 : tensor<64x128xi32>
+      }
+      func.func @full_int_scalar() -> tensor<1xi32> {
+        %0 = "ttir.full"() <{fill_value = 3 : i32, shape = array<i32: 1>}> : () -> tensor<1xi32>
+        return %0 : tensor<1xi32>
       }
     }
   }
@@ -34,69 +42,282 @@ module {
 
 // -----// IR Dump After mlir::tt::ttir::TTIRMultiDeviceTensorAnnotation (ttir-multi-device-tensor-annotation) //----- //
 module {
-  func.func @gelu_bw_default(%arg0: tensor<4x4xbf16>, %arg1: tensor<4x4xbf16>) -> tensor<4x4xbf16> {
-    %0 = "ttir.gelu_bw"(%arg0, %arg1) <{approximate = "none"}> : (tensor<4x4xbf16>, tensor<4x4xbf16>) -> tensor<4x4xbf16>
-    return %0 : tensor<4x4xbf16>
+  func.func @full_float() -> tensor<64x128xbf16> {
+    %0 = "ttir.full"() <{fill_value = 3.000000e+00 : f32, shape = array<i32: 64, 128>}> : () -> tensor<64x128xbf16>
+    return %0 : tensor<64x128xbf16>
   }
-  func.func @gelu_bw(%arg0: tensor<4x4xbf16>, %arg1: tensor<4x4xbf16>) -> tensor<4x4xbf16> {
-    %0 = "ttir.gelu_bw"(%arg0, %arg1) <{approximate = "tanh"}> : (tensor<4x4xbf16>, tensor<4x4xbf16>) -> tensor<4x4xbf16>
-    return %0 : tensor<4x4xbf16>
+  func.func @full_int() -> tensor<64x128xi32> {
+    %0 = "ttir.full"() <{fill_value = 3 : i32, shape = array<i32: 64, 128>}> : () -> tensor<64x128xi32>
+    return %0 : tensor<64x128xi32>
+  }
+  func.func @full_int_scalar() -> tensor<1xi32> {
+    %0 = "ttir.full"() <{fill_value = 3 : i32, shape = array<i32: 1>}> : () -> tensor<1xi32>
+    return %0 : tensor<1xi32>
   }
 }
 
 // -----// IR Dump After TTCoreRegisterDevicePass (ttcore-register-device) //----- //
 module attributes {ttcore.system_desc = #ttcore.system_desc<[{role = host, target_triple = "x86_64-pc-linux-gnu"}], [{arch = <wormhole_b0>, grid = 8x8, coord_translation_offsets = 18x18, l1_size = 1499136, num_dram_channels = 12, dram_channel_size = 1073741824, noc_l1_address_align_bytes = 16, pcie_address_align_bytes = 32, noc_dram_address_align_bytes = 32, l1_unreserved_base = 1024, erisc_l1_unreserved_base = 1024, dram_unreserved_base = 1024, dram_unreserved_end = 1073741824, supported_data_types = [<f32>, <f16>, <bf16>, <bfp_f8>, <bfp_bf8>, <bfp_f4>, <bfp_bf4>, <bfp_f2>, <bfp_bf2>, <u32>, <u16>, <u8>, <si32>], supported_tile_sizes = [ 4x16,  16x16,  32x16,  4x32,  16x32,  32x32], dst_physical_size_tiles = 16, num_cbs = 32, num_compute_threads = 1, num_datamovement_threads = 2}], [0], [1 : i32], [ 0x0x0x0]>} {
   ttcore.device @default_device = <workerGrid = #ttcore.grid<8x8, (d0, d1) -> (0, d0, d1)>, l1Map = (d0, d1, d2)[s0] -> (0, d0, d1, d2 + s0), dramMap = (d0, d1, d2)[s0, s1, s2, s3, s4, s5, s6] -> (0, 0, (((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) mod 12, ((((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) floordiv 12) * s4 + ((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) mod s4 + s5), meshShape = , chipIds = [0]>
-  func.func @gelu_bw_default(%arg0: tensor<4x4xbf16>, %arg1: tensor<4x4xbf16>) -> tensor<4x4xbf16> {
-    %0 = "ttir.gelu_bw"(%arg0, %arg1) <{approximate = "none"}> : (tensor<4x4xbf16>, tensor<4x4xbf16>) -> tensor<4x4xbf16>
-    return %0 : tensor<4x4xbf16>
+  func.func @full_float() -> tensor<64x128xbf16> {
+    %0 = "ttir.full"() <{fill_value = 3.000000e+00 : f32, shape = array<i32: 64, 128>}> : () -> tensor<64x128xbf16>
+    return %0 : tensor<64x128xbf16>
   }
-  func.func @gelu_bw(%arg0: tensor<4x4xbf16>, %arg1: tensor<4x4xbf16>) -> tensor<4x4xbf16> {
-    %0 = "ttir.gelu_bw"(%arg0, %arg1) <{approximate = "tanh"}> : (tensor<4x4xbf16>, tensor<4x4xbf16>) -> tensor<4x4xbf16>
-    return %0 : tensor<4x4xbf16>
+  func.func @full_int() -> tensor<64x128xi32> {
+    %0 = "ttir.full"() <{fill_value = 3 : i32, shape = array<i32: 64, 128>}> : () -> tensor<64x128xi32>
+    return %0 : tensor<64x128xi32>
+  }
+  func.func @full_int_scalar() -> tensor<1xi32> {
+    %0 = "ttir.full"() <{fill_value = 3 : i32, shape = array<i32: 1>}> : () -> tensor<1xi32>
+    return %0 : tensor<1xi32>
   }
 }
 
 // -----// IR Dump After TTIRToTTIRDecomposition (ttir-to-ttir-decomposition) //----- //
 module attributes {ttcore.system_desc = #ttcore.system_desc<[{role = host, target_triple = "x86_64-pc-linux-gnu"}], [{arch = <wormhole_b0>, grid = 8x8, coord_translation_offsets = 18x18, l1_size = 1499136, num_dram_channels = 12, dram_channel_size = 1073741824, noc_l1_address_align_bytes = 16, pcie_address_align_bytes = 32, noc_dram_address_align_bytes = 32, l1_unreserved_base = 1024, erisc_l1_unreserved_base = 1024, dram_unreserved_base = 1024, dram_unreserved_end = 1073741824, supported_data_types = [<f32>, <f16>, <bf16>, <bfp_f8>, <bfp_bf8>, <bfp_f4>, <bfp_bf4>, <bfp_f2>, <bfp_bf2>, <u32>, <u16>, <u8>, <si32>], supported_tile_sizes = [ 4x16,  16x16,  32x16,  4x32,  16x32,  32x32], dst_physical_size_tiles = 16, num_cbs = 32, num_compute_threads = 1, num_datamovement_threads = 2}], [0], [1 : i32], [ 0x0x0x0]>} {
   ttcore.device @default_device = <workerGrid = #ttcore.grid<8x8, (d0, d1) -> (0, d0, d1)>, l1Map = (d0, d1, d2)[s0] -> (0, d0, d1, d2 + s0), dramMap = (d0, d1, d2)[s0, s1, s2, s3, s4, s5, s6] -> (0, 0, (((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) mod 12, ((((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) floordiv 12) * s4 + ((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) mod s4 + s5), meshShape = , chipIds = [0]>
-  func.func @gelu_bw_default(%arg0: tensor<4x4xbf16>, %arg1: tensor<4x4xbf16>) -> tensor<4x4xbf16> {
-    %0 = "ttir.gelu_bw"(%arg0, %arg1) <{approximate = "none"}> : (tensor<4x4xbf16>, tensor<4x4xbf16>) -> tensor<4x4xbf16>
-    return %0 : tensor<4x4xbf16>
+  func.func @full_float() -> tensor<64x128xbf16> {
+    %0 = "ttir.full"() <{fill_value = 3.000000e+00 : f32, shape = array<i32: 64, 128>}> : () -> tensor<64x128xbf16>
+    return %0 : tensor<64x128xbf16>
   }
-  func.func @gelu_bw(%arg0: tensor<4x4xbf16>, %arg1: tensor<4x4xbf16>) -> tensor<4x4xbf16> {
-    %0 = "ttir.gelu_bw"(%arg0, %arg1) <{approximate = "tanh"}> : (tensor<4x4xbf16>, tensor<4x4xbf16>) -> tensor<4x4xbf16>
-    return %0 : tensor<4x4xbf16>
+  func.func @full_int() -> tensor<64x128xi32> {
+    %0 = "ttir.full"() <{fill_value = 3 : i32, shape = array<i32: 64, 128>}> : () -> tensor<64x128xi32>
+    return %0 : tensor<64x128xi32>
+  }
+  func.func @full_int_scalar() -> tensor<1xi32> {
+    %0 = "ttir.full"() <{fill_value = 3 : i32, shape = array<i32: 1>}> : () -> tensor<1xi32>
+    return %0 : tensor<1xi32>
   }
 }
 
 // -----// IR Dump After Canonicalizer (canonicalize) //----- //
 module attributes {ttcore.system_desc = #ttcore.system_desc<[{role = host, target_triple = "x86_64-pc-linux-gnu"}], [{arch = <wormhole_b0>, grid = 8x8, coord_translation_offsets = 18x18, l1_size = 1499136, num_dram_channels = 12, dram_channel_size = 1073741824, noc_l1_address_align_bytes = 16, pcie_address_align_bytes = 32, noc_dram_address_align_bytes = 32, l1_unreserved_base = 1024, erisc_l1_unreserved_base = 1024, dram_unreserved_base = 1024, dram_unreserved_end = 1073741824, supported_data_types = [<f32>, <f16>, <bf16>, <bfp_f8>, <bfp_bf8>, <bfp_f4>, <bfp_bf4>, <bfp_f2>, <bfp_bf2>, <u32>, <u16>, <u8>, <si32>], supported_tile_sizes = [ 4x16,  16x16,  32x16,  4x32,  16x32,  32x32], dst_physical_size_tiles = 16, num_cbs = 32, num_compute_threads = 1, num_datamovement_threads = 2}], [0], [1 : i32], [ 0x0x0x0]>} {
   ttcore.device @default_device = <workerGrid = #ttcore.grid<8x8, (d0, d1) -> (0, d0, d1)>, l1Map = (d0, d1, d2)[s0] -> (0, d0, d1, d2 + s0), dramMap = (d0, d1, d2)[s0, s1, s2, s3, s4, s5, s6] -> (0, 0, (((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) mod 12, ((((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) floordiv 12) * s4 + ((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) mod s4 + s5), meshShape = , chipIds = [0]>
-  func.func @gelu_bw_default(%arg0: tensor<4x4xbf16>, %arg1: tensor<4x4xbf16>) -> tensor<4x4xbf16> {
-    %0 = "ttir.gelu_bw"(%arg0, %arg1) <{approximate = "none"}> : (tensor<4x4xbf16>, tensor<4x4xbf16>) -> tensor<4x4xbf16>
-    return %0 : tensor<4x4xbf16>
+  func.func @full_float() -> tensor<64x128xbf16> {
+    %0 = "ttir.full"() <{fill_value = 3.000000e+00 : f32, shape = array<i32: 64, 128>}> : () -> tensor<64x128xbf16>
+    return %0 : tensor<64x128xbf16>
   }
-  func.func @gelu_bw(%arg0: tensor<4x4xbf16>, %arg1: tensor<4x4xbf16>) -> tensor<4x4xbf16> {
-    %0 = "ttir.gelu_bw"(%arg0, %arg1) <{approximate = "tanh"}> : (tensor<4x4xbf16>, tensor<4x4xbf16>) -> tensor<4x4xbf16>
-    return %0 : tensor<4x4xbf16>
+  func.func @full_int() -> tensor<64x128xi32> {
+    %0 = "ttir.full"() <{fill_value = 3 : i32, shape = array<i32: 64, 128>}> : () -> tensor<64x128xi32>
+    return %0 : tensor<64x128xi32>
+  }
+  func.func @full_int_scalar() -> tensor<1xi32> {
+    %0 = "ttir.full"() <{fill_value = 3 : i32, shape = array<i32: 1>}> : () -> tensor<1xi32>
+    return %0 : tensor<1xi32>
   }
 }
 
-../../test/ttmlir/Dialect/TTNN/simple_gelu_bw.mlir:6:14: error: failed to legalize operation 'ttir.gelu_bw' that was explicitly marked illegal
-        %1 = "ttir.gelu_bw"(%arg0, %arg1) : (tensor<4x4xbf16>, tensor<4x4xbf16>) -> tensor<4x4xbf16>
-             ^
-../../test/ttmlir/Dialect/TTNN/simple_gelu_bw.mlir:6:14: note: see current operation: %0 = "ttir.gelu_bw"(%arg0, %arg1) <{approximate = "none"}> : (tensor<4x4xbf16>, tensor<4x4xbf16>) -> tensor<4x4xbf16>
-// -----// IR Dump After TTIRToD2M Failed (ttir-to-d2m) //----- //
+// -----// IR Dump After TTIRToD2M (ttir-to-d2m) //----- //
 module attributes {ttcore.system_desc = #ttcore.system_desc<[{role = host, target_triple = "x86_64-pc-linux-gnu"}], [{arch = <wormhole_b0>, grid = 8x8, coord_translation_offsets = 18x18, l1_size = 1499136, num_dram_channels = 12, dram_channel_size = 1073741824, noc_l1_address_align_bytes = 16, pcie_address_align_bytes = 32, noc_dram_address_align_bytes = 32, l1_unreserved_base = 1024, erisc_l1_unreserved_base = 1024, dram_unreserved_base = 1024, dram_unreserved_end = 1073741824, supported_data_types = [<f32>, <f16>, <bf16>, <bfp_f8>, <bfp_bf8>, <bfp_f4>, <bfp_bf4>, <bfp_f2>, <bfp_bf2>, <u32>, <u16>, <u8>, <si32>], supported_tile_sizes = [ 4x16,  16x16,  32x16,  4x32,  16x32,  32x32], dst_physical_size_tiles = 16, num_cbs = 32, num_compute_threads = 1, num_datamovement_threads = 2}], [0], [1 : i32], [ 0x0x0x0]>} {
   ttcore.device @default_device = <workerGrid = #ttcore.grid<8x8, (d0, d1) -> (0, d0, d1)>, l1Map = (d0, d1, d2)[s0] -> (0, d0, d1, d2 + s0), dramMap = (d0, d1, d2)[s0, s1, s2, s3, s4, s5, s6] -> (0, 0, (((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) mod 12, ((((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) floordiv 12) * s4 + ((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) mod s4 + s5), meshShape = , chipIds = [0]>
-  func.func @gelu_bw_default(%arg0: tensor<4x4xbf16>, %arg1: tensor<4x4xbf16>) -> tensor<4x4xbf16> {
-    %0 = "ttir.gelu_bw"(%arg0, %arg1) <{approximate = "none"}> : (tensor<4x4xbf16>, tensor<4x4xbf16>) -> tensor<4x4xbf16>
-    return %0 : tensor<4x4xbf16>
+  func.func @full_float() -> tensor<64x128xbf16> {
+    %0 = d2m.full {fill_value = 3.000000e+00 : f32, shape = array<i32: 64, 128>} : tensor<64x128xbf16>
+    return %0 : tensor<64x128xbf16>
   }
-  func.func @gelu_bw(%arg0: tensor<4x4xbf16>, %arg1: tensor<4x4xbf16>) -> tensor<4x4xbf16> {
-    %0 = "ttir.gelu_bw"(%arg0, %arg1) <{approximate = "tanh"}> : (tensor<4x4xbf16>, tensor<4x4xbf16>) -> tensor<4x4xbf16>
-    return %0 : tensor<4x4xbf16>
+  func.func @full_int() -> tensor<64x128xi32> {
+    %0 = d2m.full {fill_value = 3 : i32, shape = array<i32: 64, 128>} : tensor<64x128xi32>
+    return %0 : tensor<64x128xi32>
+  }
+  func.func @full_int_scalar() -> tensor<1xi32> {
+    %0 = d2m.full {fill_value = 3 : i32, shape = array<i32: 1>} : tensor<1xi32>
+    return %0 : tensor<1xi32>
   }
 }
 
+// -----// IR Dump After D2MScalarizeConstTensors (d2m-scalarize-const-tensors) //----- //
+module attributes {ttcore.system_desc = #ttcore.system_desc<[{role = host, target_triple = "x86_64-pc-linux-gnu"}], [{arch = <wormhole_b0>, grid = 8x8, coord_translation_offsets = 18x18, l1_size = 1499136, num_dram_channels = 12, dram_channel_size = 1073741824, noc_l1_address_align_bytes = 16, pcie_address_align_bytes = 32, noc_dram_address_align_bytes = 32, l1_unreserved_base = 1024, erisc_l1_unreserved_base = 1024, dram_unreserved_base = 1024, dram_unreserved_end = 1073741824, supported_data_types = [<f32>, <f16>, <bf16>, <bfp_f8>, <bfp_bf8>, <bfp_f4>, <bfp_bf4>, <bfp_f2>, <bfp_bf2>, <u32>, <u16>, <u8>, <si32>], supported_tile_sizes = [ 4x16,  16x16,  32x16,  4x32,  16x32,  32x32], dst_physical_size_tiles = 16, num_cbs = 32, num_compute_threads = 1, num_datamovement_threads = 2}], [0], [1 : i32], [ 0x0x0x0]>} {
+  ttcore.device @default_device = <workerGrid = #ttcore.grid<8x8, (d0, d1) -> (0, d0, d1)>, l1Map = (d0, d1, d2)[s0] -> (0, d0, d1, d2 + s0), dramMap = (d0, d1, d2)[s0, s1, s2, s3, s4, s5, s6] -> (0, 0, (((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) mod 12, ((((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) floordiv 12) * s4 + ((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) mod s4 + s5), meshShape = , chipIds = [0]>
+  func.func @full_float() -> tensor<64x128xbf16> {
+    %0 = d2m.full {fill_value = 3.000000e+00 : f32, shape = array<i32: 64, 128>} : tensor<64x128xbf16>
+    return %0 : tensor<64x128xbf16>
+  }
+  func.func @full_int() -> tensor<64x128xi32> {
+    %0 = d2m.full {fill_value = 3 : i32, shape = array<i32: 64, 128>} : tensor<64x128xi32>
+    return %0 : tensor<64x128xi32>
+  }
+  func.func @full_int_scalar() -> tensor<1xi32> {
+    %0 = d2m.full {fill_value = 3 : i32, shape = array<i32: 1>} : tensor<1xi32>
+    return %0 : tensor<1xi32>
+  }
+}
+
+// -----// IR Dump After D2MMaterializeViewReturns (d2m-materialize-view-returns) //----- //
+module attributes {ttcore.system_desc = #ttcore.system_desc<[{role = host, target_triple = "x86_64-pc-linux-gnu"}], [{arch = <wormhole_b0>, grid = 8x8, coord_translation_offsets = 18x18, l1_size = 1499136, num_dram_channels = 12, dram_channel_size = 1073741824, noc_l1_address_align_bytes = 16, pcie_address_align_bytes = 32, noc_dram_address_align_bytes = 32, l1_unreserved_base = 1024, erisc_l1_unreserved_base = 1024, dram_unreserved_base = 1024, dram_unreserved_end = 1073741824, supported_data_types = [<f32>, <f16>, <bf16>, <bfp_f8>, <bfp_bf8>, <bfp_f4>, <bfp_bf4>, <bfp_f2>, <bfp_bf2>, <u32>, <u16>, <u8>, <si32>], supported_tile_sizes = [ 4x16,  16x16,  32x16,  4x32,  16x32,  32x32], dst_physical_size_tiles = 16, num_cbs = 32, num_compute_threads = 1, num_datamovement_threads = 2}], [0], [1 : i32], [ 0x0x0x0]>} {
+  ttcore.device @default_device = <workerGrid = #ttcore.grid<8x8, (d0, d1) -> (0, d0, d1)>, l1Map = (d0, d1, d2)[s0] -> (0, d0, d1, d2 + s0), dramMap = (d0, d1, d2)[s0, s1, s2, s3, s4, s5, s6] -> (0, 0, (((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) mod 12, ((((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) floordiv 12) * s4 + ((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) mod s4 + s5), meshShape = , chipIds = [0]>
+  func.func @full_float() -> tensor<64x128xbf16> {
+    %0 = d2m.full {fill_value = 3.000000e+00 : f32, shape = array<i32: 64, 128>} : tensor<64x128xbf16>
+    return %0 : tensor<64x128xbf16>
+  }
+  func.func @full_int() -> tensor<64x128xi32> {
+    %0 = d2m.full {fill_value = 3 : i32, shape = array<i32: 64, 128>} : tensor<64x128xi32>
+    return %0 : tensor<64x128xi32>
+  }
+  func.func @full_int_scalar() -> tensor<1xi32> {
+    %0 = d2m.full {fill_value = 3 : i32, shape = array<i32: 1>} : tensor<1xi32>
+    return %0 : tensor<1xi32>
+  }
+}
+
+// -----// IR Dump After D2MGridSelection (d2m-grid-selection) //----- //
+module attributes {ttcore.system_desc = #ttcore.system_desc<[{role = host, target_triple = "x86_64-pc-linux-gnu"}], [{arch = <wormhole_b0>, grid = 8x8, coord_translation_offsets = 18x18, l1_size = 1499136, num_dram_channels = 12, dram_channel_size = 1073741824, noc_l1_address_align_bytes = 16, pcie_address_align_bytes = 32, noc_dram_address_align_bytes = 32, l1_unreserved_base = 1024, erisc_l1_unreserved_base = 1024, dram_unreserved_base = 1024, dram_unreserved_end = 1073741824, supported_data_types = [<f32>, <f16>, <bf16>, <bfp_f8>, <bfp_bf8>, <bfp_f4>, <bfp_bf4>, <bfp_f2>, <bfp_bf2>, <u32>, <u16>, <u8>, <si32>], supported_tile_sizes = [ 4x16,  16x16,  32x16,  4x32,  16x32,  32x32], dst_physical_size_tiles = 16, num_cbs = 32, num_compute_threads = 1, num_datamovement_threads = 2}], [0], [1 : i32], [ 0x0x0x0]>} {
+  ttcore.device @default_device = <workerGrid = #ttcore.grid<8x8, (d0, d1) -> (0, d0, d1)>, l1Map = (d0, d1, d2)[s0] -> (0, d0, d1, d2 + s0), dramMap = (d0, d1, d2)[s0, s1, s2, s3, s4, s5, s6] -> (0, 0, (((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) mod 12, ((((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) floordiv 12) * s4 + ((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) mod s4 + s5), meshShape = , chipIds = [0]>
+  func.func @full_float() -> tensor<64x128xbf16> {
+    %0 = d2m.full {fill_value = 3.000000e+00 : f32, shape = array<i32: 64, 128>} : tensor<64x128xbf16>
+    return %0 : tensor<64x128xbf16>
+  }
+  func.func @full_int() -> tensor<64x128xi32> {
+    %0 = d2m.full {fill_value = 3 : i32, shape = array<i32: 64, 128>} : tensor<64x128xi32>
+    return %0 : tensor<64x128xi32>
+  }
+  func.func @full_int_scalar() -> tensor<1xi32> {
+    %0 = d2m.full {fill_value = 3 : i32, shape = array<i32: 1>} : tensor<1xi32>
+    return %0 : tensor<1xi32>
+  }
+}
+
+// -----// IR Dump After Canonicalizer (canonicalize) //----- //
+module attributes {ttcore.system_desc = #ttcore.system_desc<[{role = host, target_triple = "x86_64-pc-linux-gnu"}], [{arch = <wormhole_b0>, grid = 8x8, coord_translation_offsets = 18x18, l1_size = 1499136, num_dram_channels = 12, dram_channel_size = 1073741824, noc_l1_address_align_bytes = 16, pcie_address_align_bytes = 32, noc_dram_address_align_bytes = 32, l1_unreserved_base = 1024, erisc_l1_unreserved_base = 1024, dram_unreserved_base = 1024, dram_unreserved_end = 1073741824, supported_data_types = [<f32>, <f16>, <bf16>, <bfp_f8>, <bfp_bf8>, <bfp_f4>, <bfp_bf4>, <bfp_f2>, <bfp_bf2>, <u32>, <u16>, <u8>, <si32>], supported_tile_sizes = [ 4x16,  16x16,  32x16,  4x32,  16x32,  32x32], dst_physical_size_tiles = 16, num_cbs = 32, num_compute_threads = 1, num_datamovement_threads = 2}], [0], [1 : i32], [ 0x0x0x0]>} {
+  ttcore.device @default_device = <workerGrid = #ttcore.grid<8x8, (d0, d1) -> (0, d0, d1)>, l1Map = (d0, d1, d2)[s0] -> (0, d0, d1, d2 + s0), dramMap = (d0, d1, d2)[s0, s1, s2, s3, s4, s5, s6] -> (0, 0, (((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) mod 12, ((((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) floordiv 12) * s4 + ((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) mod s4 + s5), meshShape = , chipIds = [0]>
+  func.func @full_float() -> tensor<64x128xbf16> {
+    %0 = d2m.full {fill_value = 3.000000e+00 : f32, shape = array<i32: 64, 128>} : tensor<64x128xbf16>
+    return %0 : tensor<64x128xbf16>
+  }
+  func.func @full_int() -> tensor<64x128xi32> {
+    %0 = d2m.full {fill_value = 3 : i32, shape = array<i32: 64, 128>} : tensor<64x128xi32>
+    return %0 : tensor<64x128xi32>
+  }
+  func.func @full_int_scalar() -> tensor<1xi32> {
+    %0 = d2m.full {fill_value = 3 : i32, shape = array<i32: 1>} : tensor<1xi32>
+    return %0 : tensor<1xi32>
+  }
+}
+
+// -----// IR Dump After D2MLowerToLayout (d2m-lower-to-layout) //----- //
+module attributes {ttcore.system_desc = #ttcore.system_desc<[{role = host, target_triple = "x86_64-pc-linux-gnu"}], [{arch = <wormhole_b0>, grid = 8x8, coord_translation_offsets = 18x18, l1_size = 1499136, num_dram_channels = 12, dram_channel_size = 1073741824, noc_l1_address_align_bytes = 16, pcie_address_align_bytes = 32, noc_dram_address_align_bytes = 32, l1_unreserved_base = 1024, erisc_l1_unreserved_base = 1024, dram_unreserved_base = 1024, dram_unreserved_end = 1073741824, supported_data_types = [<f32>, <f16>, <bf16>, <bfp_f8>, <bfp_bf8>, <bfp_f4>, <bfp_bf4>, <bfp_f2>, <bfp_bf2>, <u32>, <u16>, <u8>, <si32>], supported_tile_sizes = [ 4x16,  16x16,  32x16,  4x32,  16x32,  32x32], dst_physical_size_tiles = 16, num_cbs = 32, num_compute_threads = 1, num_datamovement_threads = 2}], [0], [1 : i32], [ 0x0x0x0]>} {
+  ttcore.device @default_device = <workerGrid = #ttcore.grid<8x8, (d0, d1) -> (0, d0, d1)>, l1Map = (d0, d1, d2)[s0] -> (0, d0, d1, d2 + s0), dramMap = (d0, d1, d2)[s0, s1, s2, s3, s4, s5, s6] -> (0, 0, (((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) mod 12, ((((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) floordiv 12) * s4 + ((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) mod s4 + s5), meshShape = , chipIds = [0]>
+  func.func @full_float() -> tensor<64x128xbf16> {
+    %0 = d2m.full {fill_value = 3.000000e+00 : f32, shape = array<i32: 64, 128>} : tensor<64x128xbf16>
+    return %0 : tensor<64x128xbf16>
+  }
+  func.func @full_int() -> tensor<64x128xi32> {
+    %0 = d2m.full {fill_value = 3 : i32, shape = array<i32: 64, 128>} : tensor<64x128xi32>
+    return %0 : tensor<64x128xi32>
+  }
+  func.func @full_int_scalar() -> tensor<1xi32> {
+    %0 = d2m.full {fill_value = 3 : i32, shape = array<i32: 1>} : tensor<1xi32>
+    return %0 : tensor<1xi32>
+  }
+}
+
+// -----// IR Dump After D2MMaterializeViewReturns (d2m-materialize-view-returns) //----- //
+module attributes {ttcore.system_desc = #ttcore.system_desc<[{role = host, target_triple = "x86_64-pc-linux-gnu"}], [{arch = <wormhole_b0>, grid = 8x8, coord_translation_offsets = 18x18, l1_size = 1499136, num_dram_channels = 12, dram_channel_size = 1073741824, noc_l1_address_align_bytes = 16, pcie_address_align_bytes = 32, noc_dram_address_align_bytes = 32, l1_unreserved_base = 1024, erisc_l1_unreserved_base = 1024, dram_unreserved_base = 1024, dram_unreserved_end = 1073741824, supported_data_types = [<f32>, <f16>, <bf16>, <bfp_f8>, <bfp_bf8>, <bfp_f4>, <bfp_bf4>, <bfp_f2>, <bfp_bf2>, <u32>, <u16>, <u8>, <si32>], supported_tile_sizes = [ 4x16,  16x16,  32x16,  4x32,  16x32,  32x32], dst_physical_size_tiles = 16, num_cbs = 32, num_compute_threads = 1, num_datamovement_threads = 2}], [0], [1 : i32], [ 0x0x0x0]>} {
+  ttcore.device @default_device = <workerGrid = #ttcore.grid<8x8, (d0, d1) -> (0, d0, d1)>, l1Map = (d0, d1, d2)[s0] -> (0, d0, d1, d2 + s0), dramMap = (d0, d1, d2)[s0, s1, s2, s3, s4, s5, s6] -> (0, 0, (((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) mod 12, ((((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) floordiv 12) * s4 + ((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) mod s4 + s5), meshShape = , chipIds = [0]>
+  func.func @full_float() -> tensor<64x128xbf16> {
+    %0 = d2m.full {fill_value = 3.000000e+00 : f32, shape = array<i32: 64, 128>} : tensor<64x128xbf16>
+    return %0 : tensor<64x128xbf16>
+  }
+  func.func @full_int() -> tensor<64x128xi32> {
+    %0 = d2m.full {fill_value = 3 : i32, shape = array<i32: 64, 128>} : tensor<64x128xi32>
+    return %0 : tensor<64x128xi32>
+  }
+  func.func @full_int_scalar() -> tensor<1xi32> {
+    %0 = d2m.full {fill_value = 3 : i32, shape = array<i32: 1>} : tensor<1xi32>
+    return %0 : tensor<1xi32>
+  }
+}
+
+// -----// IR Dump After D2MElementwiseFusion (d2m-elementwise-fusion) //----- //
+module attributes {ttcore.system_desc = #ttcore.system_desc<[{role = host, target_triple = "x86_64-pc-linux-gnu"}], [{arch = <wormhole_b0>, grid = 8x8, coord_translation_offsets = 18x18, l1_size = 1499136, num_dram_channels = 12, dram_channel_size = 1073741824, noc_l1_address_align_bytes = 16, pcie_address_align_bytes = 32, noc_dram_address_align_bytes = 32, l1_unreserved_base = 1024, erisc_l1_unreserved_base = 1024, dram_unreserved_base = 1024, dram_unreserved_end = 1073741824, supported_data_types = [<f32>, <f16>, <bf16>, <bfp_f8>, <bfp_bf8>, <bfp_f4>, <bfp_bf4>, <bfp_f2>, <bfp_bf2>, <u32>, <u16>, <u8>, <si32>], supported_tile_sizes = [ 4x16,  16x16,  32x16,  4x32,  16x32,  32x32], dst_physical_size_tiles = 16, num_cbs = 32, num_compute_threads = 1, num_datamovement_threads = 2}], [0], [1 : i32], [ 0x0x0x0]>} {
+  ttcore.device @default_device = <workerGrid = #ttcore.grid<8x8, (d0, d1) -> (0, d0, d1)>, l1Map = (d0, d1, d2)[s0] -> (0, d0, d1, d2 + s0), dramMap = (d0, d1, d2)[s0, s1, s2, s3, s4, s5, s6] -> (0, 0, (((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) mod 12, ((((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) floordiv 12) * s4 + ((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) mod s4 + s5), meshShape = , chipIds = [0]>
+  func.func @full_float() -> tensor<64x128xbf16> {
+    %0 = d2m.full {fill_value = 3.000000e+00 : f32, shape = array<i32: 64, 128>} : tensor<64x128xbf16>
+    return %0 : tensor<64x128xbf16>
+  }
+  func.func @full_int() -> tensor<64x128xi32> {
+    %0 = d2m.full {fill_value = 3 : i32, shape = array<i32: 64, 128>} : tensor<64x128xi32>
+    return %0 : tensor<64x128xi32>
+  }
+  func.func @full_int_scalar() -> tensor<1xi32> {
+    %0 = d2m.full {fill_value = 3 : i32, shape = array<i32: 1>} : tensor<1xi32>
+    return %0 : tensor<1xi32>
+  }
+}
+
+// -----// IR Dump After LinalgElementwiseOpFusionPass (linalg-fuse-elementwise-ops) //----- //
+module attributes {ttcore.system_desc = #ttcore.system_desc<[{role = host, target_triple = "x86_64-pc-linux-gnu"}], [{arch = <wormhole_b0>, grid = 8x8, coord_translation_offsets = 18x18, l1_size = 1499136, num_dram_channels = 12, dram_channel_size = 1073741824, noc_l1_address_align_bytes = 16, pcie_address_align_bytes = 32, noc_dram_address_align_bytes = 32, l1_unreserved_base = 1024, erisc_l1_unreserved_base = 1024, dram_unreserved_base = 1024, dram_unreserved_end = 1073741824, supported_data_types = [<f32>, <f16>, <bf16>, <bfp_f8>, <bfp_bf8>, <bfp_f4>, <bfp_bf4>, <bfp_f2>, <bfp_bf2>, <u32>, <u16>, <u8>, <si32>], supported_tile_sizes = [ 4x16,  16x16,  32x16,  4x32,  16x32,  32x32], dst_physical_size_tiles = 16, num_cbs = 32, num_compute_threads = 1, num_datamovement_threads = 2}], [0], [1 : i32], [ 0x0x0x0]>} {
+  ttcore.device @default_device = <workerGrid = #ttcore.grid<8x8, (d0, d1) -> (0, d0, d1)>, l1Map = (d0, d1, d2)[s0] -> (0, d0, d1, d2 + s0), dramMap = (d0, d1, d2)[s0, s1, s2, s3, s4, s5, s6] -> (0, 0, (((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) mod 12, ((((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) floordiv 12) * s4 + ((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) mod s4 + s5), meshShape = , chipIds = [0]>
+  func.func @full_float() -> tensor<64x128xbf16> {
+    %0 = d2m.full {fill_value = 3.000000e+00 : f32, shape = array<i32: 64, 128>} : tensor<64x128xbf16>
+    return %0 : tensor<64x128xbf16>
+  }
+  func.func @full_int() -> tensor<64x128xi32> {
+    %0 = d2m.full {fill_value = 3 : i32, shape = array<i32: 64, 128>} : tensor<64x128xi32>
+    return %0 : tensor<64x128xi32>
+  }
+  func.func @full_int_scalar() -> tensor<1xi32> {
+    %0 = d2m.full {fill_value = 3 : i32, shape = array<i32: 1>} : tensor<1xi32>
+    return %0 : tensor<1xi32>
+  }
+}
+
+// -----// IR Dump After Canonicalizer (canonicalize) //----- //
+module attributes {ttcore.system_desc = #ttcore.system_desc<[{role = host, target_triple = "x86_64-pc-linux-gnu"}], [{arch = <wormhole_b0>, grid = 8x8, coord_translation_offsets = 18x18, l1_size = 1499136, num_dram_channels = 12, dram_channel_size = 1073741824, noc_l1_address_align_bytes = 16, pcie_address_align_bytes = 32, noc_dram_address_align_bytes = 32, l1_unreserved_base = 1024, erisc_l1_unreserved_base = 1024, dram_unreserved_base = 1024, dram_unreserved_end = 1073741824, supported_data_types = [<f32>, <f16>, <bf16>, <bfp_f8>, <bfp_bf8>, <bfp_f4>, <bfp_bf4>, <bfp_f2>, <bfp_bf2>, <u32>, <u16>, <u8>, <si32>], supported_tile_sizes = [ 4x16,  16x16,  32x16,  4x32,  16x32,  32x32], dst_physical_size_tiles = 16, num_cbs = 32, num_compute_threads = 1, num_datamovement_threads = 2}], [0], [1 : i32], [ 0x0x0x0]>} {
+  ttcore.device @default_device = <workerGrid = #ttcore.grid<8x8, (d0, d1) -> (0, d0, d1)>, l1Map = (d0, d1, d2)[s0] -> (0, d0, d1, d2 + s0), dramMap = (d0, d1, d2)[s0, s1, s2, s3, s4, s5, s6] -> (0, 0, (((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) mod 12, ((((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) floordiv s4) floordiv 12) * s4 + ((d0 * s1) * (s2 * (s3 * s6)) + d1 * (s2 * (s3 * s6)) + d2) mod s4 + s5), meshShape = , chipIds = [0]>
+  func.func @full_float() -> tensor<64x128xbf16> {
+    %0 = d2m.full {fill_value = 3.000000e+00 : f32, shape = array<i32: 64, 128>} : tensor<64x128xbf16>
+    return %0 : tensor<64x128xbf16>
+  }
+  func.func @full_int() -> tensor<64x128xi32> {
+    %0 = d2m.full {fill_value = 3 : i32, shape = array<i32: 64, 128>} : tensor<64x128xi32>
+    return %0 : tensor<64x128xi32>
+  }
+  func.func @full_int_scalar() -> tensor<1xi32> {
+    %0 = d2m.full {fill_value = 3 : i32, shape = array<i32: 1>} : tensor<1xi32>
+    return %0 : tensor<1xi32>
+  }
+}
+
+ttmlir-opt: /workspace/tt-mlir-dly/env/build/llvm-project-prefix/src/llvm-project/mlir/lib/IR/BuiltinAttributes.cpp:973: static DenseElementsAttr mlir::DenseElementsAttr::get(ShapedType, ArrayRef<Attribute>): Assertion `floatAttr.getType() == eltType && "expected float attribute type to equal element type"' failed.
+PLEASE submit a bug report to https://github.com/llvm/llvm-project/issues/ and include the crash backtrace and instructions to reproduce the bug.
+Stack dump:
+0.	Program arguments: ttmlir-opt --ttir-to-ttmetal-pipeline ../../test/ttmlir/Dialect/TTNN/simple_full.mlir --mlir-print-ir-after-all
+ #0 0x00006095d4050c7c llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) (/workspace/tt-mlir-dly/build/bin/ttmlir-opt+0x9e74c7c)
+ #1 0x00006095d40513bb SignalHandler(int, siginfo_t*, void*) Signals.cpp:0:0
+ #2 0x000074793d74e520 (/lib/x86_64-linux-gnu/libc.so.6+0x42520)
+ #3 0x000074793d7a29fc pthread_kill (/lib/x86_64-linux-gnu/libc.so.6+0x969fc)
+ #4 0x000074793d74e476 gsignal (/lib/x86_64-linux-gnu/libc.so.6+0x42476)
+ #5 0x000074793d7347f3 abort (/lib/x86_64-linux-gnu/libc.so.6+0x287f3)
+ #6 0x000074793d73471b (/lib/x86_64-linux-gnu/libc.so.6+0x2871b)
+ #7 0x000074793d745e96 (/lib/x86_64-linux-gnu/libc.so.6+0x39e96)
+ #8 0x00006095d3df20f6 mlir::DenseElementsAttr::get(mlir::ShapedType, llvm::ArrayRef<mlir::Attribute>) (/workspace/tt-mlir-dly/build/bin/ttmlir-opt+0x9c160f6)
+ #9 0x00006095cf348703 mlir::tt::d2m::FullOp::bufferize(mlir::RewriterBase&, mlir::bufferization::BufferizationOptions const&, mlir::bufferization::BufferizationState&) (/workspace/tt-mlir-dly/build/bin/ttmlir-opt+0x516c703)
+#10 0x00006095cf2b891e mlir::bufferization::detail::BufferizableOpInterfaceInterfaceTraits::Model<mlir::tt::d2m::FullOp>::bufferize(mlir::bufferization::detail::BufferizableOpInterfaceInterfaceTraits::Concept const*, mlir::Operation*, mlir::RewriterBase&, mlir::bufferization::BufferizationOptions const&, mlir::bufferization::BufferizationState&) D2MDialect.cpp:0:0
+#11 0x00006095d308f3d9 mlir::bufferization::bufferizeOp(mlir::Operation*, mlir::bufferization::BufferizationOptions const&, mlir::bufferization::BufferizationState&, mlir::bufferization::BufferizationStatistics*) (/workspace/tt-mlir-dly/build/bin/ttmlir-opt+0x8eb33d9)
+#12 0x00006095d30b0e3f mlir::bufferization::bufferizeModuleOp(mlir::Operation*, mlir::bufferization::OneShotBufferizationOptions const&, mlir::bufferization::BufferizationState&, mlir::bufferization::BufferizationStatistics*) (/workspace/tt-mlir-dly/build/bin/ttmlir-opt+0x8ed4e3f)
+#13 0x00006095d30b1791 mlir::bufferization::runOneShotModuleBufferize(mlir::Operation*, mlir::bufferization::OneShotBufferizationOptions const&, mlir::bufferization::BufferizationState&, mlir::bufferization::BufferizationStatistics*) (/workspace/tt-mlir-dly/build/bin/ttmlir-opt+0x8ed5791)
+#14 0x00006095cffd8b47 mlir::tt::ttcore::(anonymous namespace)::TTCoreOneShotBufferizePass::runOnOperation() TTCoreOneShotBufferize.cpp:0:0
+#15 0x00006095d3d530d6 void llvm::function_ref<void ()>::callback_fn<mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int)::$_3>(long) Pass.cpp:0:0
+#16 0x00006095d3d4d788 mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int) (/workspace/tt-mlir-dly/build/bin/ttmlir-opt+0x9b71788)
+#17 0x00006095d3d4dde2 mlir::detail::OpToOpPassAdaptor::runPipeline(mlir::OpPassManager&, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int, mlir::PassInstrumentor*, mlir::PassInstrumentation::PipelineParentInfo const*) (/workspace/tt-mlir-dly/build/bin/ttmlir-opt+0x9b71de2)
+#18 0x00006095d3d543ab auto void mlir::parallelForEach<__gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>, mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::$_12>(mlir::MLIRContext*, __gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>, __gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>, mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::$_12&&)::'lambda'(__gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>&&)::operator()<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo&>(__gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>&&) const Pass.cpp:0:0
+#19 0x00006095d3d4f6d1 mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool) (/workspace/tt-mlir-dly/build/bin/ttmlir-opt+0x9b736d1)
+#20 0x00006095d3d530c8 void llvm::function_ref<void ()>::callback_fn<mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int)::$_3>(long) Pass.cpp:0:0
+#21 0x00006095d3d4d788 mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int) (/workspace/tt-mlir-dly/build/bin/ttmlir-opt+0x9b71788)
+#22 0x00006095d3d4dde2 mlir::detail::OpToOpPassAdaptor::runPipeline(mlir::OpPassManager&, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int, mlir::PassInstrumentor*, mlir::PassInstrumentation::PipelineParentInfo const*) (/workspace/tt-mlir-dly/build/bin/ttmlir-opt+0x9b71de2)
+#23 0x00006095d3d543ab auto void mlir::parallelForEach<__gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>, mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::$_12>(mlir::MLIRContext*, __gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>, __gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>, mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::$_12&&)::'lambda'(__gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>&&)::operator()<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo&>(__gnu_cxx::__normal_iterator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo*, std::vector<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo, std::allocator<mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool)::OpPMInfo>>>&&) const Pass.cpp:0:0
+#24 0x00006095d3d4f6d1 mlir::detail::OpToOpPassAdaptor::runOnOperationAsyncImpl(bool) (/workspace/tt-mlir-dly/build/bin/ttmlir-opt+0x9b736d1)
+#25 0x00006095d3d530c8 void llvm::function_ref<void ()>::callback_fn<mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int)::$_3>(long) Pass.cpp:0:0
+#26 0x00006095d3d4d788 mlir::detail::OpToOpPassAdaptor::run(mlir::Pass*, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int) (/workspace/tt-mlir-dly/build/bin/ttmlir-opt+0x9b71788)
+#27 0x00006095d3d4dde2 mlir::detail::OpToOpPassAdaptor::runPipeline(mlir::OpPassManager&, mlir::Operation*, mlir::AnalysisManager, bool, unsigned int, mlir::PassInstrumentor*, mlir::PassInstrumentation::PipelineParentInfo const*) (/workspace/tt-mlir-dly/build/bin/ttmlir-opt+0x9b71de2)
+#28 0x00006095d3d51793 mlir::PassManager::runPasses(mlir::Operation*, mlir::AnalysisManager) (/workspace/tt-mlir-dly/build/bin/ttmlir-opt+0x9b75793)
+#29 0x00006095d3d51370 mlir::PassManager::run(mlir::Operation*) (/workspace/tt-mlir-dly/build/bin/ttmlir-opt+0x9b75370)
+#30 0x00006095cf055283 performActions(llvm::raw_ostream&, std::shared_ptr<llvm::SourceMgr> const&, mlir::MLIRContext*, mlir::MlirOptMainConfig const&) MlirOptMain.cpp:0:0
+#31 0x00006095cf054a4e llvm::LogicalResult llvm::function_ref<llvm::LogicalResult (std::unique_ptr<llvm::MemoryBuffer, std::default_delete<llvm::MemoryBuffer>>, llvm::MemoryBufferRef const&, llvm::raw_ostream&)>::callback_fn<mlir::MlirOptMain(llvm::raw_ostream&, std::unique_ptr<llvm::MemoryBuffer, std::default_delete<llvm::MemoryBuffer>>, mlir::DialectRegistry&, mlir::MlirOptMainConfig const&)::$_0>(long, std::unique_ptr<llvm::MemoryBuffer, std::default_delete<llvm::MemoryBuffer>>, llvm::MemoryBufferRef const&, llvm::raw_ostream&) MlirOptMain.cpp:0:0
+#32 0x00006095d3e69b50 mlir::splitAndProcessBuffer(std::unique_ptr<llvm::MemoryBuffer, std::default_delete<llvm::MemoryBuffer>>, llvm::function_ref<llvm::LogicalResult (std::unique_ptr<llvm::MemoryBuffer, std::default_delete<llvm::MemoryBuffer>>, llvm::MemoryBufferRef const&, llvm::raw_ostream&)>, llvm::raw_ostream&, llvm::StringRef, llvm::StringRef) (/workspace/tt-mlir-dly/build/bin/ttmlir-opt+0x9c8db50)
+#33 0x00006095cf04c1d0 mlir::MlirOptMain(llvm::raw_ostream&, std::unique_ptr<llvm::MemoryBuffer, std::default_delete<llvm::MemoryBuffer>>, mlir::DialectRegistry&, mlir::MlirOptMainConfig const&) (/workspace/tt-mlir-dly/build/bin/ttmlir-opt+0x4e701d0)
+#34 0x00006095cf04c449 mlir::MlirOptMain(int, char**, llvm::StringRef, llvm::StringRef, mlir::DialectRegistry&) (/workspace/tt-mlir-dly/build/bin/ttmlir-opt+0x4e70449)
+#35 0x00006095cf04c5f3 mlir::MlirOptMain(int, char**, llvm::StringRef, mlir::DialectRegistry&) (/workspace/tt-mlir-dly/build/bin/ttmlir-opt+0x4e705f3)
+#36 0x00006095cf046acf main (/workspace/tt-mlir-dly/build/bin/ttmlir-opt+0x4e6aacf)
+#37 0x000074793d735d90 (/lib/x86_64-linux-gnu/libc.so.6+0x29d90)
+#38 0x000074793d735e40 __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x29e40)
+#39 0x00006095cf046905 _start (/workspace/tt-mlir-dly/build/bin/ttmlir-opt+0x4e6a905)
